@@ -15,6 +15,16 @@ subnet_cidr = "/16" (options /16, /17, /18, /19, /20)<br />
 az_count = 2 or 3 (Default is 2 availability zones you can change to 3)<br />
 nat_type = single_az, multi_az, or nat_instance (Default is no nat. Single_az creates a nat gateway in one of the availability zones and pushes all traffic through it. Multi_az creates a nat gateway in each availability zones. Nat_instance creates a nat ec2 instance and runs nat through that instance.)
 
+Module example
+
+module "vpc" {
+source = "truemark/vpc/aws"
+version         = "0.0.2"
+cidr = "10.110.0.0/16"
+subnet_cidr = "/16"
+nat_type = nat_instance
+}
+
 All examples below base off of a "x.x.0.0" subnet start
 
 For a /16 the subnets provisioned are as follows
