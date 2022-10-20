@@ -19,7 +19,7 @@ All examples below base off of a "x.x.0.0" subnet start
 
 For a /16 the subnets provisioned are as follows
 
-Private subnets = ["x.x.0.0/20", "x.x.16.0/20", "x.x.32.0/20"] (4091 hosts)<br />
+Private subnets = ["x.x.0.0/19", "x.x.16.0/19", "x.x.32.0/19"] (8187 hosts)<br />
 Public subnets = ["x.x.196.0/22", "x.x.200.0/22", "x.x.204.0/22"] (1019 hosts)<br />
 Intra subnets = ["x.x.208.0/22", "x.x.212.0/22", "x.x.216.0/22"] (1019 hosts)<br />
 Database subnets = ["x.x.220.0/22", "x.x.224.0/22", "x.x.228.0/22"] (1019 hosts)<br />

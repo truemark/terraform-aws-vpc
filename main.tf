@@ -3,7 +3,7 @@ data "aws_availability_zones" "available" {}
 locals {
   # This determines the size of the private subnets
   private_subnets = {
-    "/16"     = "4"
+    "/16"     = "3"
     "/17"     = "3"
     "/18"     = "3"
     "/19"     = "3"
