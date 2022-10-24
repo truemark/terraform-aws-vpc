@@ -1,4 +1,4 @@
-variable "cidr" {
+variable "network" {
   type = string
 }
 # TODO Spell this out so you know what it is when you read it
@@ -13,4 +13,19 @@ variable "az_count" {
 variable "nat_type" {
   type = string
   default = "none"
+}
+
+variable "publictags" {
+  type = map(string)
+  default = null
+}
+
+variable "privatetags" {
+  type = map(string)
+  default = null
+}
+
+variable "redshift" {
+  type = bool
+  default = false
 }
