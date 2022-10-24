@@ -10,19 +10,31 @@ Read me file for the truemark-vpc
 
 The following are the variables needed for setup.
 
-cidr = "10.100.0.0/16" (cidr of network here is used for subnet_cidr)<br />
+network = "10.100.0.0" (network address of ip subnet)<br />
 subnet_cidr = "/16" (options /16, /17, /18, /19, /20)<br />
 az_count = 2 or 3 (Default is 2 availability zones you can change to 3)<br />
 nat_type = single_az, multi_az, or nat_instance (Default is no nat. Single_az creates a nat gateway in one of the availability zones and pushes all traffic through it. Multi_az creates a nat gateway in each availability zones. Nat_instance creates a nat ec2 instance and runs nat through that instance.)
+redshift = false or true (default is false and redshift subnets are not created add redshift = true to add those subnets)
+publictags = To add tags to public subnets
+privatetags = To add tags to private subnets
 
 Module example
 
 module "vpc" {
 source = "truemark/vpc/aws"
 version         = "0.0.2"
-cidr = "10.110.0.0/16"
+network = "10.110.0.0"
 subnet_cidr = "/16"
 nat_type = nat_instance
+redshift = true
+privatetags = {
+"kubernetes.io/cluster/test-cluster" = "shared",
+"kubernetes.io/role/internal-elb"      = "1"
+}
+publictags = {
+"kubernetes.io/cluster/test-cluster" = "shared",
+"kubernetes.io/role/elb"             = 1
+}
 }
 
 All examples below base off of a "x.x.0.0" subnet start
@@ -36,7 +48,7 @@ Database subnets = ["x.x.220.0/22", "x.x.224.0/22", "x.x.228.0/22"] (1019 hosts)
 Elasticache subnets = ["x.x.232.0/22", "x.x.236.0/22", "x.x.240.0/22"] (1019 hosts)<br />
 Redshift subnets = ["x.x.244.0/22", "x.x.248.0/22", "x.x.252.0/22"] (1019 hosts)<br />
 
-Open subnets = ["x.x.48.0/20", "x.x.64.0/18", "x.x.128.0/18", "x.x.192.0/22"]
+Open subnets = ["x.x.96.0/19", "x.x.128.0/18", "x.x.192.0/22"]
 
 For a /17 the subnets provisioned are as follows
 

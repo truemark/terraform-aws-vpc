@@ -52,6 +52,10 @@ locals {
     "/19"     = "29"
     "/20"     = "29"
   }
+  redshiftno = {
+    false = var.az_count
+    true = 0
+  }
   single_nat_gateway = {
     "none" = false
     "single_az" = true
@@ -79,6 +83,13 @@ locals {
   tags = {
     "truemark:responsibility" = "full"
   }
+  publictags = merge(var.publictags,{
+    "truemark:responsibility" = "full"
+  })
+  privatetags = merge(var.privatetags,{
+    "truemark:responsibility" = "full"
+  })
+  cidr_subnet = "${var.network}${var.subnet_cidr}"
 }
 
 resource "aws_eip" "nat_gateway_ips" {
@@ -90,14 +101,14 @@ module "vpc" {
   source                          = "terraform-aws-modules/vpc/aws"
   version                         = "3.16.0"
   name                            = "services"
-  cidr                            = var.cidr
+  cidr                            = local.cidr_subnet
   azs                             = slice(data.aws_availability_zones.available.names, 0, var.az_count)
-  private_subnets                 = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(var.cidr, local.private_subnets[var.subnet_cidr], num)]
-  public_subnets                  = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(var.cidr, local.subnets[var.subnet_cidr], num + local.public_subnets[var.subnet_cidr])]
-  intra_subnets                   = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(var.cidr, local.subnets[var.subnet_cidr], num + local.intra_subnets[var.subnet_cidr])]
-  database_subnets                = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(var.cidr, local.subnets[var.subnet_cidr], num + local.database_subnets[var.subnet_cidr])]
-  elasticache_subnets             = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(var.cidr, local.subnets[var.subnet_cidr], num + local.elasticache_subnets[var.subnet_cidr])]
-  redshift_subnets                = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(var.cidr, local.subnets[var.subnet_cidr], num + local.redshift_subnets[var.subnet_cidr])]
+  private_subnets                 = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.private_subnets[var.subnet_cidr], num)]
+  public_subnets                  = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.public_subnets[var.subnet_cidr])]
+  intra_subnets                   = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.intra_subnets[var.subnet_cidr])]
+  database_subnets                = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.database_subnets[var.subnet_cidr])]
+  elasticache_subnets             = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.elasticache_subnets[var.subnet_cidr])]
+  redshift_subnets                = [for num in range(local.redshiftno[var.redshift], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.redshift_subnets[var.subnet_cidr])]
   enable_nat_gateway              = local.enable_nat_gateway[var.nat_type]
   single_nat_gateway              = local.single_nat_gateway[var.nat_type]
   one_nat_gateway_per_az          = local.one_nat_gateway_per_az[var.nat_type]
@@ -116,15 +127,11 @@ module "vpc" {
   manage_default_network_acl      = true
   public_dedicated_network_acl    = false
   tags                            = merge(local.tags, {})
-  public_subnet_tags = merge(local.tags, {
+  public_subnet_tags = merge(local.tags,local.publictags, {
     network                              = "public"
-    "kubernetes.io/cluster/test-cluster" = "shared",
-    "kubernetes.io/role/elb"             = 1
   })
-  private_subnet_tags = merge(local.tags, {
+  private_subnet_tags = merge(local.tags,local.privatetags, {
     network                              = "private"
-    "kubernetes.io/cluster/test-cluster" = "shared",
-    "kubernetes.io/role/internal-elb"    = "1"
   })
   default_network_acl_ingress = [
     {
