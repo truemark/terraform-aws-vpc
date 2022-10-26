@@ -13,29 +13,29 @@ The following are the variables needed for setup.
 network = "10.100.0.0" (network address of ip subnet)<br />
 subnet_cidr = "/16" (options /16, /17, /18, /19, /20)<br />
 az_count = 2 or 3 (Default is 2 availability zones you can change to 3)<br />
-nat_type = single_az, multi_az, or nat_instance (Default is no nat. Single_az creates a nat gateway in one of the availability zones and pushes all traffic through it. Multi_az creates a nat gateway in each availability zones. Nat_instance creates a nat ec2 instance and runs nat through that instance.)
-redshift = false or true (default is false and redshift subnets are not created add redshift = true to add those subnets)
-publictags = To add tags to public subnets
-privatetags = To add tags to private subnets
+nat_type = single_az, multi_az, or nat_instance (Default is no nat. Single_az creates a nat gateway in one of the availability zones and pushes all traffic through it. Multi_az creates a nat gateway in each availability zones. Nat_instance creates a nat ec2 instance and runs nat through that instance.)<br />
+redshift = false or true (default is false and redshift subnets are not created add redshift = true to add those subnets)<br />
+publictags = To add tags to public subnets<br />
+privatetags = To add tags to private subnets<br />
 
-Module example
+Module example<br />
 
-module "vpc" {
-source = "truemark/vpc/aws"
-version         = "0.0.2"
-network = "10.110.0.0"
-subnet_cidr = "/16"
-nat_type = nat_instance
-redshift = true
-privatetags = {
-"kubernetes.io/cluster/test-cluster" = "shared",
-"kubernetes.io/role/internal-elb"      = "1"
-}
-publictags = {
-"kubernetes.io/cluster/test-cluster" = "shared",
-"kubernetes.io/role/elb"             = 1
-}
-}
+module "vpc" {<br />
+source = "truemark/vpc/aws"<br />
+version         = "0.0.3"<br />
+network = "10.110.0.0"<br />
+subnet_cidr = "/16"<br />
+nat_type = nat_instance<br />
+redshift = true<br />
+privatetags = {<br />
+"kubernetes.io/cluster/test-cluster" = "shared",<br />
+"kubernetes.io/role/internal-elb"      = "1"<br />
+}<br />
+publictags = {<br />
+"kubernetes.io/cluster/test-cluster" = "shared",<br />
+"kubernetes.io/role/elb"             = 1<br />
+}<br />
+}<br />
 
 All examples below base off of a "x.x.0.0" subnet start
 
