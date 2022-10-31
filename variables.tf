@@ -25,6 +25,26 @@ variable "privatetags" {
   default = null
 }
 
+variable "intratags" {
+  type = map(string)
+  default = null
+}
+
+variable "databasetags" {
+  type = map(string)
+  default = null
+}
+
+variable "elasticachetags" {
+  type = map(string)
+  default = null
+}
+
+variable "redshifttags" {
+  type = map(string)
+  default = null
+}
+
 variable "redshift" {
   type = bool
   default = false

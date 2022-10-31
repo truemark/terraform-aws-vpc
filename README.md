@@ -34,6 +34,13 @@ privatetags = {<br />
 publictags = {<br />
 "kubernetes.io/cluster/test-cluster" = "shared",<br />
 "kubernetes.io/role/elb"             = 1<br />
+intratags = {<br />
+}<br />
+databasetags = {<br />
+}<br />
+elasticachetags = {<br />
+}<br />
+redshifttags = {<br />
 }<br />
 }<br />
 

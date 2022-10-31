@@ -89,6 +89,18 @@ locals {
   privatetags = merge(var.privatetags,{
     "truemark:responsibility" = "full"
   })
+  intratags = merge(var.intratags,{
+    "truemark:responsibility" = "full"
+  })
+  databasetags = merge(var.databasetags,{
+    "truemark:responsibility" = "full"
+  })
+  elasticachetags = merge(var.elasticachetags,{
+    "truemark:responsibility" = "full"
+  })
+  redshifttags = merge(var.redshifttags,{
+    "truemark:responsibility" = "full"
+  })
   cidr_subnet = "${var.network}${var.subnet_cidr}"
 }
 
@@ -132,6 +144,18 @@ module "vpc" {
   })
   private_subnet_tags = merge(local.tags,local.privatetags, {
     network                              = "private"
+  })
+  intra_subnet_tags = merge(local.tags,local.intratags, {
+    "network" = "intra"
+  })
+  database_subnet_tags = merge(local.tags,local.databasetags, {
+    "network" = "database"
+  })
+  elasticache_subnet_tags = merge(local.tags,local.elasticachetags, {
+    "network" = "elasticache"
+  })
+  redshift_subnet_tags = merge(local.tags,local.redshifttags, {
+    "network" = "elasticache"
   })
   default_network_acl_ingress = [
     {
