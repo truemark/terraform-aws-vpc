@@ -14,6 +14,11 @@ network = "10.100.0.0" (network address of ip subnet)<br />
 subnet_cidr = "/16" (options /16, /17, /18, /19, /20)<br />
 az_count = 2 or 3 (Default is 2 availability zones you can change to 3)<br />
 nat_type = single_az, multi_az, or nat_instance (Default is no nat. Single_az creates a nat gateway in one of the availability zones and pushes all traffic through it. Multi_az creates a nat gateway in each availability zones. Nat_instance creates a nat ec2 instance and runs nat through that instance.)<br />
+private = false or true (default is true and private subnets are created to remove private = false to remove those subnets)<br />
+public = false or true (default is true and public subnets are created to remove public = false to remove those subnets)<br />
+intra = false or true (default is true and intra subnets are created to remove intra = false to remove those subnets)<br />
+database = false or true (default is true and database subnets are created to remove database = false to remove those subnets)<br />
+elasticache = false or true (default is true and elasticache subnets are created to remove elasticache = false to remove those subnets)<br />
 redshift = false or true (default is false and redshift subnets are not created add redshift = true to add those subnets)<br />
 publictags = To add tags to public subnets<br />
 privatetags = To add tags to private subnets<br />
@@ -100,3 +105,22 @@ Elasticache subnets = ["x.x.13.0/25", "x.x.13.128/25", "x.x.14.0/25"] (123 hosts
 Redshift subnets = ["x.x.14.128/25", "x.x.15.0/25", "x.x.15.128/25"] (123 hosts)<br />
 
 Open subnets = ["x.x.3.0/24", "x.x.4.0/22", "x.x.8.0/25"]
+
+If for some reason you need to override the subnets you can by doing the following
+
+network_override = override<br />
+private_networkbits = 3
+public_networkbits =1
+intra_networkbits = 1
+database_networkbits = 1
+elasticache_networkbits = 1
+redshift_networkbits = 1
+private_netnum = 0
+public_netnum = 2
+intra_netnum = 4
+database_netnum = 6
+elasticache_netnum = 8
+redshift_netnum = 10
+
+newbits = is the number of additional bits with which to extend the prefix. For example, if given a prefix ending in /16 and a newbits value of 4, the resulting subnet address will have length /20.
+netnum = is a whole number representing the subnet within the cidr that is used. For example with a /24 cidr when we add newbits of 2 this gives us 4 subnets of /26. so the netnum could be 0-3 depending on which of those subnets we want to use.
