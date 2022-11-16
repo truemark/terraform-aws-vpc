@@ -12,27 +12,27 @@ locals {
   #private subnet override
   private_network_override = {
     standard = local.private_subnets[var.subnet_cidr]
-    override = var.private_networkbits
+    override = var.private_newbits
   }
   public_network_override = {
     standard = local.subnets[var.subnet_cidr]
-    override = var.public_networkbits
+    override = var.public_newbits
   }
   intra_network_override = {
     standard = local.subnets[var.subnet_cidr]
-    override = var.intra_networkbits
+    override = var.intra_newbits
   }
   database_network_override = {
     standard = local.subnets[var.subnet_cidr]
-    override = var.database_networkbits
+    override = var.database_newbits
   }
   elasticache_network_override = {
     standard = local.subnets[var.subnet_cidr]
-    override = var.elasticache_networkbits
+    override = var.elasticache_newbits
   }
   redshift_network_override = {
     standard = local.subnets[var.subnet_cidr]
-    override = var.redshift_networkbits
+    override = var.redshift_newbits
   }
   #netnum override
   public_netnum_override = {
