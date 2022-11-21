@@ -80,37 +80,37 @@ variable "nat_type" {
 }
 
 variable "publictags" {
-  description = "Ability to add tags to public networks"
+  description = "Add tags to public networks"
   type = map(string)
   default = null
 }
 
 variable "privatetags" {
-  description = "Ability to add tags to private networks"
+  description = "Add tags to private networks"
   type = map(string)
   default = null
 }
 
 variable "intratags" {
-  description = "Ability to add tags to intra networks"
+  description = "Add tags to intra networks"
   type = map(string)
   default = null
 }
 
 variable "databasetags" {
-  description = "Ability to add tags to database networks"
+  description = "Add tags to database networks"
   type = map(string)
   default = null
 }
 
 variable "elasticachetags" {
-  description = "Ability to add tags to elasticache networks"
+  description = "Add tags to elasticache networks"
   type = map(string)
   default = null
 }
 
 variable "redshifttags" {
-  description = "Ability to add tags to redshift networks"
+  description = "Add tags to redshift networks"
   type = map(string)
   default = null
 }
@@ -120,27 +120,27 @@ variable "redshift" {
   default = false
 }
 variable "intra" {
-  description = "Ability to remove intra networks"
+  description = "Ability to remove intra networks. Set to false to not create."
   type = bool
   default = true
 }
 variable "database" {
-  description = "Ability to remove database networks"
+  description = "Ability to remove database networks. Set to false to not create."
   type = bool
   default = true
 }
 variable "elasticache" {
-  description = "Ability to remove elasticache networks"
+  description = "Ability to remove elasticache networks. Set to false to not create."
   type = bool
   default = true
 }
 variable "private" {
-  description = "Ability to remove private networks"
+  description = "Ability to remove private networks. Set to false to not create."
   type = bool
   default = true
 }
 variable "public" {
-  description = "Ability to remove public networks"
+  description = "Ability to remove public networks. Set to false to not create."
   type = bool
   default = true
 }

@@ -109,12 +109,12 @@ Open subnets = ["x.x.3.0/24", "x.x.4.0/22", "x.x.8.0/25"]
 If for some reason you need to override the subnets you can by doing the following
 
 network_override = override<br />
-private_networkbits = 3
-public_networkbits =1
-intra_networkbits = 1
-database_networkbits = 1
-elasticache_networkbits = 1
-redshift_networkbits = 1
+private_newbits = 3
+public_newbits =1
+intra_newbits = 1
+database_newbits = 1
+elasticache_newbits = 1
+redshift_newbits = 1
 private_netnum = 0
 public_netnum = 2
 intra_netnum = 4
