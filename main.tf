@@ -9,6 +9,52 @@ locals {
     "/19"     = "3"
     "/20"     = "4"
   }
+  #private subnet override
+  private_network_override = {
+    standard = local.private_subnets[var.subnet_cidr]
+    override = var.private_newbits
+  }
+  public_network_override = {
+    standard = local.subnets[var.subnet_cidr]
+    override = var.public_newbits
+  }
+  intra_network_override = {
+    standard = local.subnets[var.subnet_cidr]
+    override = var.intra_newbits
+  }
+  database_network_override = {
+    standard = local.subnets[var.subnet_cidr]
+    override = var.database_newbits
+  }
+  elasticache_network_override = {
+    standard = local.subnets[var.subnet_cidr]
+    override = var.elasticache_newbits
+  }
+  redshift_network_override = {
+    standard = local.subnets[var.subnet_cidr]
+    override = var.redshift_newbits
+  }
+  #netnum override
+  public_netnum_override = {
+    standard = local.public_subnets[var.subnet_cidr]
+    override = var.public_netnum
+  }
+  intra_netnum_override = {
+    standard = local.intra_subnets[var.subnet_cidr]
+    override = var.intra_netnum
+  }
+  database_netnum_override = {
+    standard = local.database_subnets[var.subnet_cidr]
+    override = var.database_netnum
+  }
+  elasticache_netnum_override = {
+    standard = local.elasticache_subnets[var.subnet_cidr]
+    override = var.elasticache_netnum
+  }
+  redshift_netnum_override = {
+    standard = local.redshift_subnets[var.subnet_cidr]
+    override = var.redshift_netnum
+  }
   # this determines the size of all other subnets
   subnets= {
     "/16"     = "6"
@@ -53,6 +99,26 @@ locals {
     "/20"     = "29"
   }
   redshiftno = {
+    false = var.az_count
+    true = 0
+  }
+  databaseno = {
+    false = var.az_count
+    true = 0
+  }
+  publicno = {
+    false = var.az_count
+    true = 0
+  }
+  privateno = {
+    false = var.az_count
+    true = 0
+  }
+  intrano = {
+    false = var.az_count
+    true = 0
+  }
+  elasticacheno = {
     false = var.az_count
     true = 0
   }
@@ -115,12 +181,12 @@ module "vpc" {
   name                            = "services"
   cidr                            = local.cidr_subnet
   azs                             = slice(data.aws_availability_zones.available.names, 0, var.az_count)
-  private_subnets                 = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.private_subnets[var.subnet_cidr], num)]
-  public_subnets                  = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.public_subnets[var.subnet_cidr])]
-  intra_subnets                   = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.intra_subnets[var.subnet_cidr])]
-  database_subnets                = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.database_subnets[var.subnet_cidr])]
-  elasticache_subnets             = [for num in range(0, length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.elasticache_subnets[var.subnet_cidr])]
-  redshift_subnets                = [for num in range(local.redshiftno[var.redshift], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.subnets[var.subnet_cidr], num + local.redshift_subnets[var.subnet_cidr])]
+  private_subnets                 = [for num in range(local.privateno[var.private], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.private_network_override[var.network_override], num)]
+  public_subnets                  = [for num in range(local.publicno[var.public], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.public_network_override[var.network_override], num + local.public_netnum_override[var.network_override])]
+  intra_subnets                   = [for num in range(local.intrano[var.intra], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.intra_network_override[var.network_override], num + local.intra_netnum_override[var.network_override])]
+  database_subnets                = [for num in range(local.databaseno[var.database], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.database_network_override[var.network_override], num + local.database_netnum_override[var.network_override])]
+  elasticache_subnets             = [for num in range(local.elasticacheno[var.elasticache], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.elasticache_network_override[var.network_override], num + local.elasticache_netnum_override[var.network_override])]
+  redshift_subnets                = [for num in range(local.redshiftno[var.redshift], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))):cidrsubnet(local.cidr_subnet, local.redshift_network_override[var.network_override], num + local.redshift_netnum_override[var.network_override])]
   enable_nat_gateway              = local.enable_nat_gateway[var.nat_type]
   single_nat_gateway              = local.single_nat_gateway[var.nat_type]
   one_nat_gateway_per_az          = local.one_nat_gateway_per_az[var.nat_type]
@@ -155,7 +221,7 @@ module "vpc" {
     "network" = "elasticache"
   })
   redshift_subnet_tags = merge(local.tags,local.redshifttags, {
-    "network" = "elasticache"
+    "network" = "redshift"
   })
   default_network_acl_ingress = [
     {
