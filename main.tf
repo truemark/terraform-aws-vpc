@@ -223,50 +223,6 @@ module "vpc" {
   redshift_subnet_tags = merge(local.tags,local.redshifttags, {
     "network" = "redshift"
   })
-  default_network_acl_ingress = [
-    {
-      rule_no    = 99
-      action     = "deny"
-      from_port  = 0
-      to_port    = 0
-      protocol   = "-1"
-      cidr_block = "172.30.0.0/21"
-    },
-    {
-      rule_no    = 100
-      action     = "allow"
-      from_port  = 0
-      to_port    = 0
-      protocol   = "-1"
-      cidr_block = "0.0.0.0/0"
-    },
-    {
-      rule_no         = 101
-      action          = "allow"
-      from_port       = 0
-      to_port         = 0
-      protocol        = "-1"
-      ipv6_cidr_block = "::/0"
-    },
-  ]
-  default_network_acl_egress = [
-    {
-      rule_no    = 100
-      action     = "allow"
-      from_port  = 0
-      to_port    = 0
-      protocol   = "-1"
-      cidr_block = "0.0.0.0/0"
-    },
-    {
-      rule_no         = 101
-      action          = "allow"
-      from_port       = 0
-      to_port         = 0
-      protocol        = "-1"
-      ipv6_cidr_block = "::/0"
-    }
-  ]
 }
 
 module "nat_instance" {
