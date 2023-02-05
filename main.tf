@@ -227,8 +227,8 @@ module "vpc" {
 
 module "nat_instance" {
   count = local.nat_instance[var.nat_type] ? 1 : 0
-  source = "int128/nat-instance/aws"
-
+  source = "truemark/nat-instance/aws"
+  version = "2.1.0"
   name                        = "main"
   vpc_id                      = module.vpc.vpc_id
   public_subnet               = module.vpc.public_subnets[0]
