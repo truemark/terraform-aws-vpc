@@ -232,12 +232,7 @@ module "nat_instance" {
   name                        = "main"
   vpc_id                      = module.vpc.vpc_id
   public_subnet               = module.vpc.public_subnets[0]
-  private_subnets_cidr_blocks = [
-    module.vpc.private_subnets_cidr_blocks,
-    module.vpc.database_subnets_cidr_blocks,
-    module.vpc.elasticache_subnets_cidr_blocks,
-    module.vpc.redshift_subnets_cidr_blocks
-  ]
+  private_subnets_cidr_blocks = concat(module.vpc.private_subnets_cidr_blocks, module.vpc.database_subnets_cidr_blocks, module.vpc.elasticache_subnets_cidr_blocks, module.vpc.redshift_subnets_cidr_blocks)
   private_route_table_ids     = module.vpc.private_route_table_ids
 }
 
