@@ -72,6 +72,7 @@ variable "redshift_netnum" {
   type        = number
   default     = null
 }
+
 # TODO Likely shouldn't be a number. This should be three options, SINGLE_AZ, MULTI_AZ, POOR_PERSON_NAT, OR NONE
 variable "nat_type" {
   description = "Set nat type. The options are none, single_az, multi_az, and nat_instance. Single spins up a nat gateway in one availability zone. Multi spins up a nat gateway in each availability zone. nat instance uses the module int128/nat-instance/aws to create a small nat instance."

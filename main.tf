@@ -150,22 +150,16 @@ locals {
 
   }
   publictags = merge(var.publictags, {
-
   })
   privatetags = merge(var.privatetags, {
-
   })
   intratags = merge(var.intratags, {
-
   })
   databasetags = merge(var.databasetags, {
-
   })
   elasticachetags = merge(var.elasticachetags, {
-
   })
   redshifttags = merge(var.redshifttags, {
-
   })
   cidr_subnet = "${var.network}${var.subnet_cidr}"
 }
