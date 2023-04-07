@@ -222,12 +222,15 @@ module "vpc" {
 module "nat_instance" {
   count                       = local.nat_instance[var.nat_type] ? 1 : 0
   source                      = "truemark/nat-instance/aws"
-  version                     = "2.1.0"
+  version                     = "3.0.0"
   name                        = "main"
   vpc_id                      = module.vpc.vpc_id
   public_subnet               = module.vpc.public_subnets[0]
   private_subnets_cidr_blocks = concat(module.vpc.private_subnets_cidr_blocks, module.vpc.database_subnets_cidr_blocks, module.vpc.elasticache_subnets_cidr_blocks, module.vpc.redshift_subnets_cidr_blocks)
   private_route_table_ids     = module.vpc.private_route_table_ids
+  architecture                = var.architecture
+  instance_types              = var.instance_types
+  use_spot_instance           = var.use_spot_instance
 }
 
 resource "aws_eip" "nat_instance_ip" {

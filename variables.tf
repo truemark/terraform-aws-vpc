@@ -145,3 +145,21 @@ variable "public" {
   type        = bool
   default     = true
 }
+
+variable "instance_types" {
+  description = "Candidates of spot instance type for the NAT instance. This is used in the mixed instances policy"
+  type        = list(string)
+  default     = null
+}
+
+variable "architecture" {
+  description = "Candidates of spot instance type for the NAT instance. This is used in the mixed instances policy"
+  type        = list(string)
+  default     = null
+}
+
+variable "use_spot_instance" {
+  description = "Whether to use spot or on-demand EC2 instance"
+  type        = bool
+  default     = null
+}
