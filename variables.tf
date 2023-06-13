@@ -118,7 +118,7 @@ variable "redshifttags" {
 
 variable "default_network_acl_ingress" {
   description = "Add rules to default network ingress acl"
-  type        = map(string)
+  type        = list
   default     = null
 }
 variable "redshift" {
