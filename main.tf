@@ -161,8 +161,8 @@ locals {
   })
   redshifttags = merge(var.redshifttags, {
   })
+  acl = var.default_network_acl_ingress
   cidr_subnet = "${var.network}${var.subnet_cidr}"
-
   #   endpoints
 
   endpoint = {
