@@ -234,6 +234,7 @@ module "vpc" {
   redshift_subnet_tags = merge(local.tags, local.redshifttags, {
     "network" = "redshift"
   })
+  default_network_acl_ingress = local.acl
 }
 
 module "nat_instance" {
