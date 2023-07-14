@@ -161,7 +161,7 @@ locals {
   })
   redshifttags = merge(var.redshifttags, {
   })
-  acl = var.default_network_acl_ingress
+  acl         = var.default_network_acl_ingress
   cidr_subnet = "${var.network}${var.subnet_cidr}"
   #   endpoints
 
@@ -187,35 +187,40 @@ resource "aws_eip" "nat_gateway_ips" {
 }
 
 module "vpc" {
-  source                           = "terraform-aws-modules/vpc/aws"
-  version                          = "3.18.1"
-  name                             = "services"
-  cidr                             = local.cidr_subnet
-  azs                              = slice(data.aws_availability_zones.available.names, 0, var.az_count)
-  private_subnets                  = [for num in range(local.privateno[var.private], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.private_network_override[var.network_override], num)]
-  public_subnets                   = [for num in range(local.publicno[var.public], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.public_network_override[var.network_override], num + local.public_netnum_override[var.network_override])]
-  intra_subnets                    = [for num in range(local.intrano[var.intra], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.intra_network_override[var.network_override], num + local.intra_netnum_override[var.network_override])]
-  database_subnets                 = [for num in range(local.databaseno[var.database], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.database_network_override[var.network_override], num + local.database_netnum_override[var.network_override])]
-  elasticache_subnets              = [for num in range(local.elasticacheno[var.elasticache], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.elasticache_network_override[var.network_override], num + local.elasticache_netnum_override[var.network_override])]
-  redshift_subnets                 = [for num in range(local.redshiftno[var.redshift], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.redshift_network_override[var.network_override], num + local.redshift_netnum_override[var.network_override])]
-  enable_nat_gateway               = local.enable_nat_gateway[var.nat_type]
-  single_nat_gateway               = local.single_nat_gateway[var.nat_type]
-  one_nat_gateway_per_az           = local.one_nat_gateway_per_az[var.nat_type]
-  reuse_nat_ips                    = true
-  external_nat_ip_ids              = aws_eip.nat_gateway_ips.*.id
-  enable_ipv6                      = true
-  assign_ipv6_address_on_creation  = true
-  private_subnet_ipv6_prefixes     = [0, 1, 2]
-  public_subnet_ipv6_prefixes      = [3, 4, 5]
-  intra_subnet_ipv6_prefixes       = [6, 7, 8]
-  database_subnet_ipv6_prefixes    = [9, 10, 11]
-  elasticache_subnet_ipv6_prefixes = [12, 13, 14]
-  redshift_subnet_ipv6_prefixes    = [15, 16, 17]
-  enable_dns_hostnames             = true
-  enable_dns_support               = true
-  manage_default_network_acl       = true
-  public_dedicated_network_acl     = false
-  tags                             = merge(local.tags, {})
+  source                                          = "terraform-aws-modules/vpc/aws"
+  version                                         = "5.0.0"
+  name                                            = "services"
+  cidr                                            = local.cidr_subnet
+  azs                                             = slice(data.aws_availability_zones.available.names, 0, var.az_count)
+  private_subnets                                 = [for num in range(local.privateno[var.private], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.private_network_override[var.network_override], num)]
+  public_subnets                                  = [for num in range(local.publicno[var.public], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.public_network_override[var.network_override], num + local.public_netnum_override[var.network_override])]
+  intra_subnets                                   = [for num in range(local.intrano[var.intra], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.intra_network_override[var.network_override], num + local.intra_netnum_override[var.network_override])]
+  database_subnets                                = [for num in range(local.databaseno[var.database], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.database_network_override[var.network_override], num + local.database_netnum_override[var.network_override])]
+  elasticache_subnets                             = [for num in range(local.elasticacheno[var.elasticache], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.elasticache_network_override[var.network_override], num + local.elasticache_netnum_override[var.network_override])]
+  redshift_subnets                                = [for num in range(local.redshiftno[var.redshift], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : cidrsubnet(local.cidr_subnet, local.redshift_network_override[var.network_override], num + local.redshift_netnum_override[var.network_override])]
+  enable_nat_gateway                              = local.enable_nat_gateway[var.nat_type]
+  single_nat_gateway                              = local.single_nat_gateway[var.nat_type]
+  one_nat_gateway_per_az                          = local.one_nat_gateway_per_az[var.nat_type]
+  reuse_nat_ips                                   = true
+  external_nat_ip_ids                             = aws_eip.nat_gateway_ips.*.id
+  enable_ipv6                                     = true
+  database_subnet_assign_ipv6_address_on_creation = true
+  intra_subnet_assign_ipv6_address_on_creation    = true
+  public_subnet_assign_ipv6_address_on_creation   = true
+  private_subnet_assign_ipv6_address_on_creation  = true
+  map_public_ip_on_launch                         = true
+  private_subnet_ipv6_prefixes                    = [0, 1, 2]
+  public_subnet_ipv6_prefixes                     = [3, 4, 5]
+  intra_subnet_ipv6_prefixes                      = [6, 7, 8]
+  database_subnet_ipv6_prefixes                   = [9, 10, 11]
+  elasticache_subnet_ipv6_prefixes                = [12, 13, 14]
+  redshift_subnet_ipv6_prefixes                   = [15, 16, 17]
+  enable_dns_hostnames                            = true
+  enable_dns_support                              = true
+  manage_default_network_acl                      = true
+  public_dedicated_network_acl                    = false
+  manage_default_security_group                   = false
+  tags                                            = merge(local.tags, {})
   public_subnet_tags = merge(local.tags, local.publictags, {
     network = "public"
   })
@@ -264,7 +269,7 @@ resource "aws_eip" "nat_instance_ip" {
 ################################################################################
 
 locals {
-  endpoints = { for k, v in local.endpoint : k => v if var.create  && try(v.create, true)   }
+  endpoints = { for k, v in local.endpoint : k => v if var.create && try(v.create, true) }
 }
 
 data "aws_vpc_endpoint_service" "this" {
