@@ -161,7 +161,8 @@ locals {
   })
   redshifttags = merge(var.redshifttags, {
   })
-  acl         = var.default_network_acl_ingress
+  default_network_acl_ingress        = var.default_network_acl_ingress
+  default_network_acl_egress        = var.default_network_acl_egress
   cidr_subnet = "${var.network}${var.subnet_cidr}"
   #   endpoints
 
@@ -239,7 +240,8 @@ module "vpc" {
   redshift_subnet_tags = merge(local.tags, local.redshifttags, {
     "network" = "redshift"
   })
-  default_network_acl_ingress = local.acl
+  default_network_acl_ingress = local.default_network_acl_ingress
+  default_network_acl_egress = local.default_network_acl_egress
 }
 
 module "nat_instance" {
