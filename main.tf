@@ -98,6 +98,11 @@ locals {
     "/19" = "29"
     "/20" = "29"
   }
+  ipv6_public_subnets = "3"
+  ipv6_intra_subnets = "6"
+  ipv6_database_subnets = "9"
+  ipv6_elasticache_subnets = "12"
+  ipv6_redshift_subnets = "15"
   redshiftno = {
     false = var.az_count
     true  = 0
@@ -169,13 +174,15 @@ locals {
   endpoint = {
     s3 = {
       service          = "s3"
-      route_tables_ids = [module.vpc.private_route_table_ids]
+      service_type    = "Gateway"
+      route_table_ids = flatten([module.vpc.private_route_table_ids, module.vpc.intra_route_table_ids])
       tags             = { Name = "s3-vpc-endpoint" }
       create           = var.s3
     }
     dynamodb = {
       service          = "dynamodb"
-      route_tables_ids = [module.vpc.private_route_table_ids]
+      service_type    = "Gateway"
+      route_table_ids = flatten([module.vpc.private_route_table_ids])
       tags             = { Name = "dynamodb-vpc-endpoint" }
       create           = var.dynamo
     }
@@ -184,7 +191,7 @@ locals {
 
 resource "aws_eip" "nat_gateway_ips" {
   count = var.nat_type == "single_az" ? 1 : var.nat_type == "multi_az" ? var.az_count : 0
-  vpc   = true
+  domain = "vpc"
 }
 
 module "vpc" {
@@ -210,12 +217,12 @@ module "vpc" {
   public_subnet_assign_ipv6_address_on_creation   = true
   private_subnet_assign_ipv6_address_on_creation  = true
   map_public_ip_on_launch                         = true
-  private_subnet_ipv6_prefixes                    = [0, 1, 2]
-  public_subnet_ipv6_prefixes                     = [3, 4, 5]
-  intra_subnet_ipv6_prefixes                      = [6, 7, 8]
-  database_subnet_ipv6_prefixes                   = [9, 10, 11]
-  elasticache_subnet_ipv6_prefixes                = [12, 13, 14]
-  redshift_subnet_ipv6_prefixes                   = [15, 16, 17]
+  private_subnet_ipv6_prefixes                    = [for num in range(local.privateno[var.private], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : num]
+  public_subnet_ipv6_prefixes                     = [for num in range(local.publicno[var.public], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : (num + local.ipv6_public_subnets)]
+  intra_subnet_ipv6_prefixes                      = [for num in range(local.intrano[var.intra], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : (num + local.ipv6_intra_subnets)]
+  database_subnet_ipv6_prefixes                   = [for num in range(local.databaseno[var.database], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : (num + local.ipv6_database_subnets)]
+  elasticache_subnet_ipv6_prefixes                = [for num in range(local.elasticacheno[var.elasticache], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : (num + local.ipv6_elasticache_subnets)]
+  redshift_subnet_ipv6_prefixes                   = [for num in range(local.redshiftno[var.redshift], length(slice(data.aws_availability_zones.available.names, 0, var.az_count))) : (num + local.ipv6_redshift_subnets)]
   database_subnet_enable_dns64                    = var.dns64
   intra_subnet_enable_dns64                       = var.dns64
   private_subnet_enable_dns64                     = var.dns64
