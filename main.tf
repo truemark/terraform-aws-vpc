@@ -189,7 +189,7 @@ resource "aws_eip" "nat_gateway_ips" {
 
 module "vpc" {
   source                                          = "terraform-aws-modules/vpc/aws"
-  version                                         = "5.0.0"
+  version                                         = "5.2.0"
   name                                            = "services"
   cidr                                            = local.cidr_subnet
   azs                                             = slice(data.aws_availability_zones.available.names, 0, var.az_count)
@@ -216,6 +216,12 @@ module "vpc" {
   database_subnet_ipv6_prefixes                   = [9, 10, 11]
   elasticache_subnet_ipv6_prefixes                = [12, 13, 14]
   redshift_subnet_ipv6_prefixes                   = [15, 16, 17]
+  database_subnet_enable_dns64                    = var.dns64
+  intra_subnet_enable_dns64                       = var.dns64
+  private_subnet_enable_dns64                     = var.dns64
+  public_subnet_enable_dns64                      = var.dns64
+  elasticache_subnet_enable_dns64                 = var.dns64
+  redshift_subnet_enable_dns64                    = var.dns64
   enable_dns_hostnames                            = true
   enable_dns_support                              = true
   manage_default_network_acl                      = true

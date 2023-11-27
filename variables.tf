@@ -266,3 +266,9 @@ variable "dynamo" {
   type        = bool
   default     = true
 }
+
+variable "dns64" {
+  description = "enable dns64 for all subnets created"
+  type        = bool
+  default     = false
+}
