@@ -273,3 +273,8 @@ variable "dns64" {
   default     = false
 }
 
+variable "enable_ipv6" {
+  description = "enable dns64 for all subnets created"
+  type        = bool
+  default     = true
+}

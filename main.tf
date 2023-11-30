@@ -211,7 +211,7 @@ module "vpc" {
   one_nat_gateway_per_az                          = local.one_nat_gateway_per_az[var.nat_type]
   reuse_nat_ips                                   = true
   external_nat_ip_ids                             = aws_eip.nat_gateway_ips.*.id
-  enable_ipv6                                     = true
+  enable_ipv6                                     = var.enable_ipv6
   database_subnet_assign_ipv6_address_on_creation = true
   intra_subnet_assign_ipv6_address_on_creation    = true
   public_subnet_assign_ipv6_address_on_creation   = true
