@@ -151,9 +151,7 @@ locals {
     "multi_az"     = false
     "nat_instance" = true
   }
-  tags = {
-
-  }
+  tags = var.tags
   publictags = merge(var.publictags, {
   })
   privatetags = merge(var.privatetags, {
