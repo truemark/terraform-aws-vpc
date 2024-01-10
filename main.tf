@@ -146,9 +146,7 @@ locals {
     "multi_az"     = false
     "nat_instance" = true
   }
-  tags = {
-
-  }
+  tags = var.tags
   publictags = merge(var.publictags, {
   })
   privatetags = merge(var.privatetags, {
@@ -216,26 +214,26 @@ module "vpc" {
   enable_dns_support               = true
   manage_default_network_acl       = true
   public_dedicated_network_acl     = false
-  tags                             = merge(var.tags, {})
-  public_subnet_tags = merge(var.tags, local.publictags, {
+  tags                             = merge(local.tags, {})
+  public_subnet_tags = merge(local.tags, local.publictags, {
     network = "public"
   })
-  private_subnet_tags = merge(var.tags, local.privatetags, {
+  private_subnet_tags = merge(local.tags, local.privatetags, {
     network = "private"
   })
-  intra_subnet_tags = merge(var.tags, local.intratags, {
+  intra_subnet_tags = merge(local.tags, local.intratags, {
     "network" = "intra"
   })
-  database_subnet_tags = merge(var.tags, local.databasetags, {
+  database_subnet_tags = merge(local.tags, local.databasetags, {
     "network" = "database"
   })
-  elasticache_subnet_tags = merge(var.tags, local.elasticachetags, {
+  elasticache_subnet_tags = merge(local.tags, local.elasticachetags, {
     "network" = "elasticache"
   })
-  redshift_subnet_tags = merge(var.tags, local.redshifttags, {
+  redshift_subnet_tags = merge(local.tags, local.redshifttags, {
     "network" = "redshift"
   })
-  default_network_acl_ingress = var.default_network_acl_ingress
+  default_network_acl_ingress = local.acl
 }
 
 module "nat_instance" {
