@@ -235,7 +235,7 @@ module "vpc" {
   redshift_subnet_tags = merge(var.tags, local.redshifttags, {
     "network" = "redshift"
   })
-  default_network_acl_ingress = default_network_acl_ingress
+  default_network_acl_ingress = var.default_network_acl_ingress
 }
 
 module "nat_instance" {
@@ -303,4 +303,3 @@ resource "aws_vpc_endpoint" "this" {
     delete = lookup(var.timeouts, "delete", "10m")
   }
 }
-
