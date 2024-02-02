@@ -146,9 +146,7 @@ locals {
     "multi_az"     = false
     "nat_instance" = true
   }
-  tags = {
-
-  }
+  tags = var.tags
   publictags = merge(var.publictags, {
   })
   privatetags = merge(var.privatetags, {
@@ -184,6 +182,7 @@ locals {
 resource "aws_eip" "nat_gateway_ips" {
   count = var.nat_type == "single_az" ? 1 : var.nat_type == "multi_az" ? var.az_count : 0
   vpc   = true
+  tags                             = merge(var.tags, {})
 }
 
 module "vpc" {
@@ -249,14 +248,15 @@ module "nat_instance" {
   architecture                = var.architecture
   instance_types              = var.instance_types
   use_spot_instance           = var.use_spot_instance
+  tags                             = merge(var.tags, {})
 }
 
 resource "aws_eip" "nat_instance_ip" {
   count             = local.nat_instance[var.nat_type] ? 1 : 0
   network_interface = module.nat_instance[0].eni_id
-  tags = {
+  tags = merge(var.tags,{
     "Name" = "nat-instance-main"
-  }
+  })
 }
 
 ################################################################################
