@@ -10,6 +10,7 @@ Read me file for the truemark-vpc
 
 The following are the variables needed for setup.
 
+name = this adds a name to the vpc. The default name is Services if this variable is not set.<br />
 network = "10.100.0.0" (network address of ip subnet)<br />
 subnet_cidr = "/16" (options /16, /17, /18, /19, /20)<br />
 az_count = 2 or 3 (Default is 2 availability zones you can change to 3)<br />
