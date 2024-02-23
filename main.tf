@@ -1,4 +1,12 @@
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  # New configuration to exclude Local Zones
+  filter {
+    name  = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+}
 
 locals {
   # This determines the size of the private subnets
