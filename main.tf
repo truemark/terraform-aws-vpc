@@ -180,7 +180,7 @@ locals {
     dynamodb = {
       service          = "dynamodb"
       service_type    = "Gateway"
-      route_table_ids = flatten([module.vpc.private_route_table_ids])
+      route_table_ids = flatten([module.vpc.private_route_table_ids, module.vpc.intra_route_table_ids])
       tags             = { Name = "dynamodb-vpc-endpoint" }
       create           = var.dynamo
     }
