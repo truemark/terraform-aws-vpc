@@ -174,12 +174,14 @@ locals {
   endpoint = {
     s3 = {
       service          = "s3"
+      service_type    = "Gateway"
       route_tables_ids = flatten([module.vpc.private_route_table_ids, module.vpc.intra_route_table_ids])
       tags             = { Name = "s3-vpc-endpoint" }
       create           = var.s3
     }
     dynamodb = {
       service          = "dynamodb"
+      service_type    = "Gateway"
       route_tables_ids = flatten([module.vpc.private_route_table_ids, module.vpc.intra_route_table_ids])
       tags             = { Name = "dynamodb-vpc-endpoint" }
       create           = var.dynamo
