@@ -197,7 +197,7 @@ resource "aws_eip" "nat_gateway_ips" {
 
 module "vpc" {
   source                           = "terraform-aws-modules/vpc/aws"
-  version                          = "3.18.1"
+  version                          = "5.8.1"
   name                             = var.name
   cidr                             = local.cidr_subnet
   azs                              = slice(data.aws_availability_zones.available.names, 0, var.az_count)
