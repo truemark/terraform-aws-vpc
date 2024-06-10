@@ -3,7 +3,7 @@ data "aws_availability_zones" "available" {
 
   # New configuration to exclude Local Zones
   filter {
-    name  = "opt-in-status"
+    name   = "opt-in-status"
     values = ["opt-in-not-required"]
   }
 }
@@ -167,24 +167,24 @@ locals {
   })
   redshifttags = merge(var.redshifttags, {
   })
-  acl = var.default_network_acl_ingress
+  acl         = var.default_network_acl_ingress
   cidr_subnet = "${var.network}${var.subnet_cidr}"
   #   endpoints
 
   endpoint = {
     s3 = {
-      service          = "s3"
+      service         = "s3"
       service_type    = "Gateway"
       route_table_ids = flatten([module.vpc.private_route_table_ids, module.vpc.intra_route_table_ids])
-      tags             = { Name = "s3-vpc-endpoint" }
-      create           = var.s3
+      tags            = { Name = "s3-vpc-endpoint" }
+      create          = var.s3
     }
     dynamodb = {
-      service          = "dynamodb"
+      service         = "dynamodb"
       service_type    = "Gateway"
       route_table_ids = flatten([module.vpc.private_route_table_ids, module.vpc.intra_route_table_ids])
-      tags             = { Name = "dynamodb-vpc-endpoint" }
-      create           = var.dynamo
+      tags            = { Name = "dynamodb-vpc-endpoint" }
+      create          = var.dynamo
     }
   }
 }
@@ -192,7 +192,7 @@ locals {
 resource "aws_eip" "nat_gateway_ips" {
   count = var.nat_type == "single_az" ? 1 : var.nat_type == "multi_az" ? var.az_count : 0
   vpc   = true
-  tags                             = merge(var.tags, {})
+  tags  = merge(var.tags, {})
 }
 
 module "vpc" {
@@ -258,13 +258,13 @@ module "nat_instance" {
   architecture                = var.architecture
   instance_types              = var.instance_types
   use_spot_instance           = var.use_spot_instance
-  tags                             = merge(var.tags, {})
+  tags                        = merge(var.tags, {})
 }
 
 resource "aws_eip" "nat_instance_ip" {
   count             = local.nat_instance[var.nat_type] ? 1 : 0
   network_interface = module.nat_instance[0].eni_id
-  tags = merge(var.tags,{
+  tags = merge(var.tags, {
     "Name" = "nat-instance-main"
   })
 }
@@ -274,7 +274,7 @@ resource "aws_eip" "nat_instance_ip" {
 ################################################################################
 
 locals {
-  endpoints = { for k, v in local.endpoint : k => v if var.create  && try(v.create, true)   }
+  endpoints = { for k, v in local.endpoint : k => v if var.create && try(v.create, true) }
 }
 
 data "aws_vpc_endpoint_service" "this" {
