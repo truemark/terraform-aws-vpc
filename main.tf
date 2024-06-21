@@ -311,3 +311,13 @@ resource "aws_vpc_endpoint" "this" {
     delete = lookup(var.timeouts, "delete", "10m")
   }
 }
+
+module "parameters" {
+  source                       = "truemark/network-parameters/aws"
+  version                      = "1.1.6"
+  name                         = module.vpc.name
+  vpc_id                       = module.vpc.vpc_id
+  azs                          = module.vpc.azs
+  public_subnet_ids            = module.vpc.public_subnets
+  private_subnet_ids           = module.vpc.private_subnets
+}
